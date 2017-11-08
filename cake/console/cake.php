@@ -136,6 +136,14 @@ class ShellDispatcher {
 		$this->parseParams($args);
 		$this->_initEnvironment();
 		$this->__buildPaths();
+
+		if (PHP_MAJOR_VERSION >= 7) {
+			set_error_handler(function ($errno, $errstr, $file) {
+				return (strpos($file, '/cake/') !== false && strpos($errstr, 'Declaration of') === 0);
+			}, E_WARNING);
+		}
+
+
 		$this->_stop($this->dispatch() === false ? 1 : 0);
 	}
 
