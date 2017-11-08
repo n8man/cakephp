@@ -960,7 +960,7 @@ class EmailComponent extends Object{
 				$this->smtpError = 'timeout';
 				return false;
 			}
-			$response = end(explode("\r\n", rtrim($response, "\r\n")));
+			$response = current(array_slice(explode("\r\n", rtrim($response, "\r\n")), -1));
 
 			if (preg_match('/^(' . $checkCode . ')(.)/', $response, $code)) {
 				if ($code[2] === '-') {
