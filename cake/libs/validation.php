@@ -536,7 +536,7 @@ class Validation extends Object {
 		if (is_array($check)) {
 			return Validation::extension(array_shift($check), $extensions);
 		}
-		$extension = strtolower(array_pop(explode('.', $check)));
+		$extension = strtolower(current(array_slice(explode('.', $check), -1)));
 		foreach ($extensions as $value) {
 			if ($extension == strtolower($value)) {
 				return true;

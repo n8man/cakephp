@@ -582,7 +582,7 @@ class Dispatcher extends Object {
 			$this->_stop();
 		}
 		$controller = null;
-		$ext = array_pop(explode('.', $url));
+		$ext = current(array_slice(explode('.', $url), -1));
 		$parts = explode('/', $url);
 		$assetFile = null;
 
