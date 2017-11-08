@@ -180,7 +180,7 @@ class Debugger extends Object {
  * @access public
  * @static
  */
-	function &getInstance($class = null) {
+	static function &getInstance($class = null) {
 		static $instance = array();
 		if (!empty($class)) {
 			if (!$instance || strtolower($class) != strtolower(get_class($instance[0]))) {
@@ -414,7 +414,7 @@ class Debugger extends Object {
  * @access public
  * @static
  */
-	function trimPath($path) {
+	static function trimPath($path) {
 		if (!defined('CAKE_CORE_INCLUDE_PATH') || !defined('APP')) {
 			return $path;
 		}
@@ -692,7 +692,7 @@ class Debugger extends Object {
  * @access public
  * @static
  */
-	function checkSecurityKeys() {
+	static function checkSecurityKeys() {
 		if (Configure::read('Security.salt') == 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi') {
 			trigger_error(__('Please change the value of \'Security.salt\' in app/config/core.php to a salt value specific to your application', true), E_USER_NOTICE);
 		}

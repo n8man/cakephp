@@ -97,7 +97,7 @@ class Validation extends Object {
  * @access public
  * @static
  */
-	function &getInstance() {
+	static function &getInstance() {
 		static $instance = array();
 
 		if (!$instance) {

@@ -162,7 +162,7 @@ class CakeTestSuiteDispatcher {
  * @return string The manager class name
  * @static
  */
-	function &getManager() {
+	static function &getManager() {
 		if (empty($this->Manager)) {
 			$this->Manager = new $this->_managerClass();
 		}
@@ -175,7 +175,7 @@ class CakeTestSuiteDispatcher {
  * @return void
  * @static
  */
-	function &getReporter() {
+	static function &getReporter() {
 		static $Reporter = NULL;
 		if (!$Reporter) {
 			$type = strtolower($this->params['output']);

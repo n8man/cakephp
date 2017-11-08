@@ -351,7 +351,7 @@ class Inflector {
  * @return void
  * @static
  */
-	function rules($type, $rules, $reset = false) {
+	static function rules($type, $rules, $reset = false) {
 		$_this =& Inflector::getInstance();
 		$var = '_'.$type;
 

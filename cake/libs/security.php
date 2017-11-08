@@ -41,7 +41,7 @@ class Security extends Object {
  * @access public
  * @static
  */
-	function &getInstance() {
+	static function &getInstance() {
 		static $instance = array();
 		if (!$instance) {
 			$instance[0] = new Security;
@@ -56,7 +56,7 @@ class Security extends Object {
  * @access public
  * @static
  */
-	function inactiveMins() {
+	static function inactiveMins() {
 		switch (Configure::read('Security.level')) {
 			case 'high':
 				return 10;
@@ -78,7 +78,7 @@ class Security extends Object {
  * @access public
  * @static
  */
-	function generateAuthKey() {
+	static function generateAuthKey() {
 		if (!class_exists('CakeString')) {
 			App::import('Core', 'CakeString');
 		}
@@ -110,7 +110,7 @@ class Security extends Object {
  * @access public
  * @static
  */
-	function hash($string, $type = null, $salt = false) {
+	static function hash($string, $type = null, $salt = false) {
 		$_this =& Security::getInstance();
 
 		if ($salt) {
@@ -168,7 +168,7 @@ class Security extends Object {
  * @access public
  * @static
  */
-	function cipher($text, $key) {
+	static function cipher($text, $key) {
 		if (empty($key)) {
 			trigger_error(__('You cannot use an empty key for Security::cipher()', true), E_USER_WARNING);
 			return '';

@@ -87,7 +87,7 @@ class Set {
  * @access public
  * @static
  */
-	function pushDiff($array, $array2) {
+	static function pushDiff($array, $array2) {
 		if (empty($array) && !empty($array2)) {
 			return $array2;
 		}
