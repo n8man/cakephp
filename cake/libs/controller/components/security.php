@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 0.10.8.2156
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::import('Core', array('String', 'Security'));
+App::import('Core', array('CakeString', 'Security'));
 
 /**
  * SecurityComponent
@@ -726,7 +726,7 @@ class SecurityComponent extends Object {
 			'type' => 'basic',
 			'realm' => env('SERVER_NAME'),
 			'qop' => 'auth',
-			'nonce' => String::uuid()
+			'nonce' => CakeString::uuid()
 		), array_filter($options));
 		$options = array_merge(array('opaque' => md5($options['realm'])), $options);
 	}

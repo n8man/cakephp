@@ -44,7 +44,7 @@ class Security extends Object {
 	function &getInstance() {
 		static $instance = array();
 		if (!$instance) {
-			$instance[0] =& new Security;
+			$instance[0] = new Security;
 		}
 		return $instance[0];
 	}
@@ -79,10 +79,10 @@ class Security extends Object {
  * @static
  */
 	function generateAuthKey() {
-		if (!class_exists('String')) {
-			App::import('Core', 'String');
+		if (!class_exists('CakeString')) {
+			App::import('Core', 'CakeString');
 		}
-		return Security::hash(String::uuid());
+		return Security::hash(CakeString::uuid());
 	}
 
 /**
