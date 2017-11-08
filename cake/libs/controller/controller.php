@@ -926,8 +926,8 @@ class Controller extends Object {
 			$base = FULL_BASE_URL . $this->webroot;
 			if (strpos($ref, $base) === 0) {
 				$return =  substr($ref, strlen($base));
-				if ($return[0] != '/') {
-					$return = '/'.$return;
+				if (!$return or $return[0] != '/') {
+					$return = '/' . $return;
 				}
 				return $return;
 			} elseif (!$local) {
