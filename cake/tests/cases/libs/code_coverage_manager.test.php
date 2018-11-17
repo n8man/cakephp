@@ -170,7 +170,7 @@ class CodeCoverageManagerTest extends CakeTestCase {
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  */
-		class Set extends Object {
+		class Set extends CakeBaseObject {
 
 /**
 		 * Value of the Set object.

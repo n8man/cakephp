@@ -259,7 +259,7 @@ if (!function_exists('mb_encode_mimeheader')) {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class Multibyte extends Object {
+class Multibyte extends CakeBaseObject {
 
 /**
  *  Holds the case folding values

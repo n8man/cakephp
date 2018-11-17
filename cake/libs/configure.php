@@ -25,7 +25,7 @@
  * @subpackage    cake.cake.libs
  * @link          http://book.cakephp.org/1.3/en/The-Manual/Developing-with-CakePHP/Configuration.html#the-configuration-class
  */
-class Configure extends Object {
+class Configure extends CakeBaseObject {
 
 /**
  * Current debug level.
@@ -454,7 +454,7 @@ class Configure extends Object {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class App extends Object {
+class App extends CakeBaseObject {
 
 /**
  * List of object types and their properties

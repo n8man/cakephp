@@ -31,7 +31,7 @@ App::import('Core', 'CakeString');
  * @link http://book.cakephp.org/1.3/en/The-Manual/Core-Components/Email.html
  *
  */
-class EmailComponent extends Object{
+class EmailComponent extends CakeBaseObject {
 
 /**
  * Recipient of the email

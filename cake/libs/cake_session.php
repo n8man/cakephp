@@ -35,7 +35,8 @@ if (!class_exists('Security')) {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class CakeSession extends Object {
+
+class CakeSession extends CakeBaseObject {
 
 /**
  * True if the Session is still valid
@@ -454,6 +455,14 @@ class CakeSession extends Object {
  * @access public
  */
 	function destroy() {
+		header('X-session-is-started: ' . ((int)$this->started()));
+		header('X-session-is-active: ' . ((int)(session_status() === PHP_SESSION_ACTIVE)));
+		header('X-session-is-none: ' . ((int)(session_status() === PHP_SESSION_NONE)));
+		header('X-session-is-disabled: ' . ((int)(session_status() === PHP_SESSION_DISABLED)));
+		header('X-session-name: ' . session_name());
+		header('X-session-path: ' . session_save_path());
+		header('X-cake-session-path: ' . $this->path);
+		header('X-session-id: ' . session_id());
 		if ($this->started()) {
 			session_destroy();
 		}
@@ -569,6 +578,14 @@ class CakeSession extends Object {
 				}
 			break;
 		}
+
+		if(Configure::read('Session.customConfig')) {
+			$custom = CONFIGS . Configure::read('Session.customConfig') . '.php';
+
+			if (is_file($custom)) {
+				require($custom);
+			}
+		}
 	}
 
 /**
@@ -601,7 +618,10 @@ class CakeSession extends Object {
  */
 	function _checkValid() {
 		if ($this->read('Config')) {
-			if ((Configure::read('Session.checkAgent') === false || $this->_userAgent == $this->read('Config.userAgent')) && $this->time <= $this->read('Config.time')) {
+			if (
+				(Configure::read('Session.checkAgent') === false || $this->_userAgent == $this->read('Config.userAgent'))
+				&& $this->time <= $this->read('Config.time')
+			) {
 				$time = $this->read('Config.time');
 				$this->write('Config.time', $this->sessionTime);
 				if (Configure::read('Security.level') === 'high') {
@@ -616,6 +636,7 @@ class CakeSession extends Object {
 				}
 				$this->valid = true;
 			} else {
+				header('X-session-status-before-destroy: 1');
 				$this->destroy();
 				$this->valid = false;
 				$this->__setError(1, 'Session Highjacking Attempted !!!');
@@ -771,6 +792,7 @@ class CakeSession extends Object {
 		$model =& ClassRegistry::getObject('Session');
 		$return = $model->delete($id);
 		return (bool) $return;
+		//return true;
 	}
 
 /**

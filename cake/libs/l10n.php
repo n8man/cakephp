@@ -24,7 +24,7 @@
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class L10n extends Object {
+class L10n extends CakeBaseObject {
 
 /**
  * The language for current locale

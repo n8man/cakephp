@@ -26,7 +26,7 @@ App::import('Core', array('CakeString', 'Security'));
  * @subpackage    cake.cake.libs.controller.components
  * @link http://book.cakephp.org/1.3/en/The-Manual/Core-Components/Security-Component.html#Security-Component
  */
-class SecurityComponent extends Object {
+class SecurityComponent extends CakeBaseObject {
 
 /**
  * The controller method that will be called if this request is black-hole'd

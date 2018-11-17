@@ -28,7 +28,7 @@
  * @package       cake
  * @subpackage    cake.cake.libs.model
  */
-class ModelBehavior extends Object {
+class ModelBehavior extends CakeBaseObject {
 
 /**
  * Contains configuration settings for use with individual model objects.  This
@@ -214,7 +214,7 @@ class ModelBehavior extends Object {
  * @package       cake
  * @subpackage    cake.cake.libs.model
  */
-class BehaviorCollection extends Object {
+class BehaviorCollection extends CakeBaseObject {
 
 /**
  * Stores a reference to the attached name

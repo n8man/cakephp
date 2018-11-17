@@ -122,7 +122,7 @@ class SessionComponentTest extends CakeTestCase {
 		$Session->startup(new SessionTestController());
 		$this->assertTrue(isset($_SESSION));
 
-		$Object = new Object();
+		$Object = new CakeBaseObject();
 		$Session = new SessionComponent();
 		$Session->start();
 		$expected = $Session->id();

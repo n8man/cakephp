@@ -356,7 +356,7 @@ class TestController extends AppController {
  * @package       cake
  * @subpackage    cake.tests.cases.libs.controller
  */
-class TestComponent extends Object {
+class TestComponent extends CakeBaseObject {
 
 /**
  * beforeRedirect method

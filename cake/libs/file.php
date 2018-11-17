@@ -22,8 +22,8 @@
  * Included libraries.
  *
  */
-if (!class_exists('Object')) {
-	require LIBS . 'object.php';
+if (!class_exists('CakeBaseObject')) {
+	require LIBS . 'cake_base_object.php';
 }
 if (!class_exists('Folder')) {
 	require LIBS . 'folder.php';
@@ -35,7 +35,7 @@ if (!class_exists('Folder')) {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class File extends Object {
+class File extends CakeBaseObject {
 
 /**
  * Folder object of the File

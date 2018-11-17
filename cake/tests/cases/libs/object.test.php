@@ -171,7 +171,7 @@ class RequestActionPersistentController extends Controller {
  * @package       cake
  * @subpackage    cake.tests.cases.libs
  */
-class TestObject extends Object {
+class TestObject extends CakeBaseObject {
 
 /**
  * firstName property

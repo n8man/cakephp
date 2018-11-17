@@ -65,7 +65,7 @@ class CakeErrorController extends AppController {
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class ErrorHandler extends Object {
+class ErrorHandler extends CakeBaseObject {
 
 /**
  * Controller instance.

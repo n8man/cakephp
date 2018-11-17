@@ -32,7 +32,7 @@ App::import('View', 'Helper', false);
  * @package       cake
  * @subpackage    cake.cake.libs.view
  */
-class View extends Object {
+class View extends CakeBaseObject {
 
 /**
  * Path parts for creating links in views.

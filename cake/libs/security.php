@@ -24,7 +24,7 @@
  * @package       cake
  * @subpackage    cake.cake.libs
  */
-class Security extends Object {
+class Security extends CakeBaseObject {
 
 /**
  * Default hash method

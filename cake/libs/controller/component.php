@@ -24,7 +24,7 @@
  * @subpackage    cake.cake.libs.controller
  * @link          http://book.cakephp.org/1.3/en/The-Manual/Developing-with-CakePHP/Components.html
  */
-class Component extends Object {
+class Component extends CakeBaseObject {
 
 /**
  * Contains various controller variable information (plugin, name, base).

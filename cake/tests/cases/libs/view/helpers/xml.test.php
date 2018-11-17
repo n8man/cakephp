@@ -28,7 +28,7 @@ App::import('Helper', 'Xml');
  * @package       cake
  * @subpackage    cake.tests.cases.libs.view.helpers
  */
-class TestXml extends Object {
+class TestXml extends CakeBaseObject {
 
 /**
  * content property

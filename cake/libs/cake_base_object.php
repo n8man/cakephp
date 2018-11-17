@@ -30,7 +30,8 @@
  * @package cake
  * @subpackage cake.cake.libs
  */
-class Object {
+
+class CakeBaseObject {
 
 /**
  * A hack to support __construct() on PHP 4

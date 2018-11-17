@@ -51,7 +51,7 @@ if (!class_exists('AppController')) {
  *
  * @package cake.tests.cases.libs.controller
  */
-class MergeVarComponent extends Object {
+class MergeVarComponent extends CakeBaseObject {
 
 }
 

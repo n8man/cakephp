@@ -28,7 +28,7 @@ include_once CONFIGS . 'database.php';
  * @package       cake
  * @subpackage    cake.cake.libs.model
  */
-class ConnectionManager extends Object {
+class ConnectionManager extends CakeBaseObject {
 
 /**
  * Holds a loaded instance of the Connections object

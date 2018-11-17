@@ -30,7 +30,7 @@ App::import('Core', 'Set');
  * @subpackage    cake.cake.libs
  * @since         CakePHP v .0.10.3.1400
  */
-class XmlNode extends Object {
+class XmlNode extends CakeBaseObject {
 
 /**
  * Name of node

@@ -31,7 +31,7 @@
  * @subpackage    cake.cake.libs.controller.components
  * @link http://book.cakephp.org/1.3/en/The-Manual/Core-Components/Access-Control-Lists.html
  */
-class AclComponent extends Object {
+class AclComponent extends CakeBaseObject {
 
 /**
  * Instance of an ACL class
@@ -169,7 +169,7 @@ class AclComponent extends Object {
  * @subpackage    cake.cake.libs.controller.components
  * @abstract
  */
-class AclBase extends Object {
+class AclBase extends CakeBaseObject {
 
 /**
  * This class should never be instantiated, just subclassed.
