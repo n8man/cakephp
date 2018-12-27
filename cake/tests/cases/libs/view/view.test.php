@@ -24,7 +24,7 @@ Mock::generate('Helper', 'CallbackMockHelper');
 Mock::generate('CacheHelper', 'ViewTestMockCacheHelper');
 
 if (!class_exists('ErrorHandler')) {
-	App::import('Core', array('Error'));
+	App::import('Core', array('ErrorHandler'));
 }
 
 /**

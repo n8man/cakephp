@@ -141,7 +141,7 @@ if (!class_exists('AppController')) {
 } elseif (!defined('APP_CONTROLLER_EXISTS')){
 	define('APP_CONTROLLER_EXISTS', true);
 }
-App::import('Core', array('Error', 'Controller'));
+App::import('Core', array('ErrorHandler', 'Controller'));
 
 /**
  * TestErrorController class

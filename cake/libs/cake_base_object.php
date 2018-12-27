@@ -187,7 +187,7 @@ class CakeBaseObject {
  */
 	function cakeError($method, $messages = array()) {
 		if (!class_exists('ErrorHandler')) {
-			App::import('Core', 'Error');
+			App::import('Core', 'ErrorHandler');
 
 			if (file_exists(APP . 'error.php')) {
 				include_once (APP . 'error.php');
