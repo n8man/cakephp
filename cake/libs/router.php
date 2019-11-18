@@ -762,6 +762,7 @@ class Router {
  * @static
  */
 	static function url($url = null, $full = false) {
+		$current = false;
 		$self =& Router::getInstance();
 		$defaults = $params = array('plugin' => null, 'controller' => null, 'action' => 'index');
 
@@ -771,22 +772,15 @@ class Router {
 			extract($full + array('escape' => false, 'full' => false));
 		}
 
-		if (!empty($self->__params)) {
-			if (isset($this) && !isset($this->params['requested'])) {
-				$params = $self->__params[0];
-			} else {
-				$params = end($self->__params);
-			}
+		if ($_params = $self->getParams($current)) {
+			$params = $_params;
 		}
+		
 		$path = array('base' => null);
-
-		if (!empty($self->__paths)) {
-			if (isset($this) && !isset($this->params['requested'])) {
-				$path = $self->__paths[0];
-			} else {
-				$path = end($self->__paths);
-			}
+		if ($_path = $self->getPaths($current)) {
+			$path = $_path;
 		}
+
 		$base = $path['base'];
 		$extension = $output = $mapped = $q = $frag = null;
 
