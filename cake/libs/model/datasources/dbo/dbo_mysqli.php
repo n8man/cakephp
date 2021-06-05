@@ -41,15 +41,16 @@ class DboMysqli extends DboMysqlBase {
  *
  * @var array
  */
-	var $_baseConfig = array(
+	var $_baseConfig = [
 		'persistent' => true,
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => '',
 		'database' => 'cake',
 		'port' => '3306',
-		'socket' => null
-	);
+		'socket' => null,
+		'sql_mode' => 'NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION',
+	];
 
 /**
  * Connects to the database using options in the given configuration array.
@@ -73,6 +74,11 @@ class DboMysqli extends DboMysqlBase {
 		if (!empty($config['encoding'])) {
 			$this->setEncoding($config['encoding']);
 		}
+
+		if (!empty($config['sql_mode'])) {
+			$this->setSQLMode($config['sql_mode']);
+		}
+
 		return $this->connected;
 	}
 

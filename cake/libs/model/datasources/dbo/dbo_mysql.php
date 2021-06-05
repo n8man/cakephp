@@ -250,6 +250,15 @@ class DboMysqlBase extends DboSource {
 	}
 
 /**
+ * Sets the database SQL Mode
+ *
+ * @param string $mode Database encoding
+ */
+	function setSQLMode($mode) {
+		return $this->_execute('SET SQL_MODE = ' . $this->value($mode)) != false;
+	}
+
+/**
  * Returns an array of the indexes in given datasource name.
  *
  * @param string $model Name of model to inspect
@@ -539,14 +548,15 @@ class DboMysql extends DboMysqlBase {
  *
  * @var array
  */
-	var $_baseConfig = array(
+	var $_baseConfig = [
 		'persistent' => true,
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => '',
 		'database' => 'cake',
-		'port' => '3306'
-	);
+		'port' => '3306',
+		'sql_mode' => 'NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION',
+	];
 
 /**
  * Connects to the database using options in the given configuration array.
@@ -574,6 +584,10 @@ class DboMysql extends DboMysqlBase {
 
 		if (!empty($config['encoding'])) {
 			$this->setEncoding($config['encoding']);
+		}
+
+		if (!empty($config['sql_mode'])) {
+			$this->setSQLMode($config['sql_mode']);
 		}
 
 		$this->_useAlias = (bool)version_compare(mysql_get_server_info($this->connection), "4.1", ">=");
