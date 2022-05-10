@@ -140,9 +140,10 @@ class DboSource extends DataSource {
 			return false;
 		}
 		if ($autoConnect) {
-			return $this->connect();
-		} else {
-			return true;
+			if (!$this->connect()) {       
+                trigger_error($this->lastError(), E_USER_ERROR);
+                return false;
+			}
 		}
 	}
 

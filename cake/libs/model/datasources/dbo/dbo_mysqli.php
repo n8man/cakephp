@@ -49,7 +49,13 @@ class DboMysqli extends DboMysqlBase {
 		'database' => 'cake',
 		'port' => '3306',
 		'socket' => null,
-		'sql_mode' => 'NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION',
+		'sql_modes' => [
+			'NO_ZERO_IN_DATE',
+			'NO_ZERO_DATE',
+			'ERROR_FOR_DIVISION_BY_ZERO',
+			'NO_ENGINE_SUBSTITUTION',
+			'NO_AUTO_CREATE_USER',
+		],
 	];
 
 /**
@@ -57,26 +63,40 @@ class DboMysqli extends DboMysqlBase {
  *
  * @return boolean True if the database could be connected, else false
  */
-	function connect() {
+	function connect(): bool
+	{
 		$config = $this->config;
 		$this->connected = false;
 
 		$this->connection = mysqli_connect($config['host'], $config['login'], $config['password'], $config['database'], $config['port'], $config['socket']);
 
-		if ($this->connection !== false) {
-			$this->connected = true;
-		} else {
-			return false;
+		if ($this->connection === false) {
+            return false;
 		}
 
-		$this->_useAlias = (bool)version_compare(mysqli_get_server_info($this->connection), "4.1", ">=");
+		$this->connected = true;
+
+        $this->_useAlias = ($this->connection->server_version >= 40100);
 
 		if (!empty($config['encoding'])) {
 			$this->setEncoding($config['encoding']);
 		}
 
-		if (!empty($config['sql_mode'])) {
-			$this->setSQLMode($config['sql_mode']);
+		if (!empty($config['sql_modes'])) {
+
+			// MySQL >= 8.0 has removed support for SQL_MODE NO_AUTO_CREATE_USER
+			// Remove NO_AUTO_CREATE_USER from sql_model if present
+			if (
+				$this->connection->server_version >= 80000
+				&& in_array('NO_AUTO_CREATE_USER', $config['sql_modes'])
+			) {
+                $config['sql_modes'] = array_diff($config['sql_modes'], ['NO_AUTO_CREATE_USER']);
+			}
+
+			if (!$this->setSQLMode($config['sql_modes'])) {
+				$this->connected = false;
+				return false;
+            }
 		}
 
 		return $this->connected;
@@ -102,6 +122,17 @@ class DboMysqli extends DboMysqlBase {
 		$this->connected = !@mysqli_close($this->connection);
 		return !$this->connected;
 	}
+
+/**
+ * Sets the database SQL Mode
+ *
+ * @param string $mode Database encoding
+ */
+function setSQLMode(array $modes): bool
+{
+	$mode = implode(',', array_map('trim', $modes));
+	return $this->_execute('SET SQL_MODE = ' . $this->value($mode)) != false;
+}
 
 /**
  * Executes given SQL statement.
