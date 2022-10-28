@@ -170,19 +170,6 @@ class JsHelper extends AppHelper {
 	}
 
 /**
- * Overwrite inherited Helper::value()
- * See JsBaseEngineHelper::value() for more information on this method.
- *
- * @param mixed $val A PHP variable to be converted to JSON
- * @param boolean $quoteStrings If false, leaves string values unquoted
- * @return string a JavaScript-safe/JSON representation of $val
- * @access public
- **/
-	function value($val, $quoteString = true) {
-		return $this->{$this->__engineName}->value($val, $quoteString);
-	}
-
-/**
  * Writes all Javascript generated so far to a code block or
  * caches them to a file and returns a linked script.  If no scripts have been
  * buffered this method will return null.  If the request is an XHR(ajax) request
@@ -456,13 +443,6 @@ class JsHelper extends AppHelper {
  * @subpackage    cake.cake.libs.view.helpers
  */
 class JsBaseEngineHelper extends AppHelper {
-/**
- * Determines whether native JSON extension is used for encoding.  Set by object constructor.
- *
- * @var boolean
- * @access public
- */
-	var $useNative = false;
 
 /**
  * The js snippet for the current selection.
@@ -506,7 +486,6 @@ class JsBaseEngineHelper extends AppHelper {
  */
 	function __construct() {
 		parent::__construct();
-		$this->useNative = function_exists('json_encode');
 	}
 
 /**
@@ -572,7 +551,7 @@ class JsBaseEngineHelper extends AppHelper {
 
 /**
  * Generates a JavaScript object in JavaScript Object Notation (JSON)
- * from an array.  Will use native JSON encode method if available, and $useNative == true
+ * from an array.  Will use native JSON encode method
  *
  * ### Options:
  *
@@ -594,81 +573,9 @@ class JsBaseEngineHelper extends AppHelper {
 			$data = get_object_vars($data);
 		}
 
-		$out = $keys = array();
-		$numeric = true;
-
-		if ($this->useNative && function_exists('json_encode')) {
-			$rt = json_encode($data);
-		} else {
-			if (is_null($data)) {
-				return 'null';
-			}
-			if (is_bool($data)) {
-				return $data ? 'true' : 'false';
-			}
-			if (is_array($data)) {
-				$keys = array_keys($data);
-			}
-
-			if (!empty($keys)) {
-				$numeric = (array_values($keys) === array_keys(array_values($keys)));
-			}
-
-			foreach ($data as $key => $val) {
-				if (is_array($val) || is_object($val)) {
-					$val = $this->object($val);
-				} else {
-					$val = $this->value($val);
-				}
-				if (!$numeric) {
-					$val = '"' . $this->value($key, false) . '":' . $val;
-				}
-				$out[] = $val;
-			}
-
-			if (!$numeric) {
-				$rt = '{' . join(',', $out) . '}';
-			} else {
-				$rt = '[' . join(',', $out) . ']';
-			}
-		}
+		$rt = json_encode($data);
 		$rt = $options['prefix'] . $rt . $options['postfix'];
 		return $rt;
-	}
-
-/**
- * Converts a PHP-native variable of any type to a JSON-equivalent representation
- *
- * @param mixed $val A PHP variable to be converted to JSON
- * @param boolean $quoteStrings If false, leaves string values unquoted
- * @return string a JavaScript-safe/JSON representation of $val
- * @access public
- */
-	function value($val, $quoteString = true) {
-		switch (true) {
-			case (is_array($val) || is_object($val)):
-				$val = $this->object($val);
-			break;
-			case ($val === null):
-				$val = 'null';
-			break;
-			case (is_bool($val)):
-				$val = ($val === true) ? 'true' : 'false';
-			break;
-			case (is_int($val)):
-				$val = $val;
-			break;
-			case (is_float($val)):
-				$val = sprintf("%.11f", $val);
-			break;
-			default:
-				$val = $this->escape($val);
-				if ($quoteString) {
-					$val = '"' . $val . '"';
-				}
-			break;
-		}
-		return $val;
 	}
 
 /**
@@ -1027,7 +934,7 @@ class JsBaseEngineHelper extends AppHelper {
 		$safeKeys = array_flip($safeKeys);
 		foreach ($options as $key => $value) {
 			if (!is_int($value) && !isset($safeKeys[$key])) {
-				$value = $this->value($value);
+				$value = json_encode($value);
 			}
 			$out[] = $key . ':' . $value;
 		}

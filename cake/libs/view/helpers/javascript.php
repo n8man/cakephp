@@ -30,14 +30,6 @@
 class JavascriptHelper extends AppHelper {
 
 /**
- * Determines whether native JSON extension is used for encoding.  Set by object constructor.
- *
- * @var boolean
- * @access public
- */
-	var $useNative = false;
-
-/**
  * If true, automatically writes events to the end of a script or to an external JavaScript file
  * at the end of page execution
  *
@@ -155,7 +147,6 @@ class JavascriptHelper extends AppHelper {
 				}
 			}
 		}
-		$this->useNative = function_exists('json_encode');
 		return parent::__construct($options);
 	}
 
@@ -617,53 +608,7 @@ class JavascriptHelper extends AppHelper {
 			$data = get_object_vars($data);
 		}
 
-		$out = $keys = array();
-		$numeric = true;
-
-		if ($this->useNative) {
-			$rt = json_encode($data);
-		} else {
-			if (is_null($data)) {
-				return 'null';
-			}
-			if (is_bool($data)) {
-				return $data ? 'true' : 'false';
-			}
-
-			if (is_array($data)) {
-				$keys = array_keys($data);
-			}
-
-			if (!empty($keys)) {
-				$numeric = (array_values($keys) === array_keys(array_values($keys)));
-			}
-
-			foreach ($data as $key => $val) {
-				if (is_array($val) || is_object($val)) {
-					$val = $this->object(
-						$val,
-						array_merge($options, array('block' => false, 'prefix' => '', 'postfix' => ''))
-					);
-				} else {
-					$quoteStrings = (
-						!count($options['stringKeys']) ||
-						($options['quoteKeys'] && in_array($key, $options['stringKeys'], true)) ||
-						(!$options['quoteKeys'] && !in_array($key, $options['stringKeys'], true))
-					);
-					$val = $this->value($val, $quoteStrings);
-				}
-				if (!$numeric) {
-					$val = $options['q'] . $this->value($key, false) . $options['q'] . ':' . $val;
-				}
-				$out[] = $val;
-			}
-
-			if (!$numeric) {
-				$rt = '{' . implode(',', $out) . '}';
-			} else {
-				$rt = '[' . implode(',', $out) . ']';
-			}
-		}
+		$rt = json_encode($data);
 		$rt = $options['prefix'] . $rt . $options['postfix'];
 
 		if ($options['block']) {
@@ -671,40 +616,6 @@ class JavascriptHelper extends AppHelper {
 		}
 
 		return $rt;
-	}
-
-/**
- * Converts a PHP-native variable of any type to a JSON-equivalent representation
- *
- * @param mixed $val A PHP variable to be converted to JSON
- * @param boolean $quoteStrings If false, leaves string values unquoted
- * @return string a JavaScript-safe/JSON representation of $val
- */
-	function value($val, $quoteStrings = true) {
-		switch (true) {
-			case (is_array($val) || is_object($val)):
-				$val = $this->object($val);
-			break;
-			case ($val === null):
-				$val = 'null';
-			break;
-			case (is_bool($val)):
-				$val = !empty($val) ? 'true' : 'false';
-			break;
-			case (is_int($val)):
-				$val = $val;
-			break;
-			case (is_float($val)):
-				$val = sprintf("%.11f", $val);
-			break;
-			default:
-				$val = $this->escapeString($val);
-				if ($quoteStrings) {
-					$val = '"' . $val . '"';
-				}
-			break;
-		}
-		return $val;
 	}
 
 /**
