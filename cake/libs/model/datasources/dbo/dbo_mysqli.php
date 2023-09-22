@@ -74,11 +74,11 @@ class DboMysqli extends DboMysqlBase
 
         $db = mysqli_init();
         if ($config['use_ssl']) {
-            // Requires SSL/TLS
+            // Require SSL/TLS to be used
             $flags = $flags | MYSQLI_CLIENT_SSL;
 
-			// Disable verification of server certificate		
-			if (!$config['ssl_verify']) {
+            // Disable verification of server certificate
+            if (!$config['ssl_verify']) {
                 $flags = $flags | MYSQLI_CLIENT_SSL_DONT_VERIFY_SERVER_CERT;
             }
         }
@@ -93,8 +93,8 @@ class DboMysqli extends DboMysqlBase
             $config['socket'],
             $flags
         )) {
-			return false;
-		}
+            return false;
+        }
 
         $this->connected = true;
 
