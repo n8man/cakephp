@@ -17,7 +17,7 @@
  * @since         CakePHP(tm) v 1.1.4.2974
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::import('Datasource', 'DboMysql');
+App::import('Datasource', 'DboMysqlBase');
 
 /**
  * MySQLi DBO driver object
@@ -35,6 +35,11 @@ class DboMysqli extends DboMysqlBase
      * @var string
      */
     public $description = "Mysqli DBO Driver";
+
+    /**
+     * @var \mysqli|false
+     */
+    public $connection;
 
     /**
      * Base configuration settings for Mysqli driver
@@ -83,16 +88,31 @@ class DboMysqli extends DboMysqlBase
             }
         }
 
+        $host = $config['host'];
+
+        // Prefix host with 'p:' to force a persistent connection
+        if (
+            ($config['persistent'] ?? true)
+            // might be unix socket
+            && !empty($config['host'])
+            // persistent connection might already be forced
+            && stripos($config['host'], 'p:') === false
+        ) {
+            $host = 'p:' . $host;
+        }
+        
         $this->connection = $db;
-        if (!$this->connection->real_connect(
-            $config['host'],
+        $this->connected = @$db->real_connect(
+            $host,
             $config['login'],
             $config['password'],
             $config['database'],
             $config['port'],
             $config['socket'],
             $flags
-        )) {
+        );
+
+        if (!$this->connected) {
             return false;
         }
 
@@ -105,16 +125,6 @@ class DboMysqli extends DboMysqlBase
         }
 
         if (!empty($config['sql_modes'])) {
-
-            // MySQL >= 8.0 has removed support for SQL_MODE NO_AUTO_CREATE_USER
-            // Remove NO_AUTO_CREATE_USER from sql_mode if present
-            if (
-                $this->connection->server_version >= 80000
-                && in_array('NO_AUTO_CREATE_USER', $config['sql_modes'])
-            ) {
-                $config['sql_modes'] = array_diff($config['sql_modes'], ['NO_AUTO_CREATE_USER']);
-            }
-
             if (!$this->setSQLMode($config['sql_modes'])) {
                 $this->connected = false;
                 return false;
@@ -122,6 +132,16 @@ class DboMysqli extends DboMysqlBase
         }
 
         return $this->connected;
+    }
+
+    /**
+     * Sets the database encoding
+     *
+     * @param string $enc Database encoding
+     */
+    public function setEncoding($enc)
+    {
+        return $this->connection->set_charset($enc);
     }
 
     /**
@@ -154,6 +174,15 @@ class DboMysqli extends DboMysqlBase
      */
     public function setSQLMode(array $modes): bool
     {
+        // MySQL >= 8.0 has removed support for SQL_MODE NO_AUTO_CREATE_USER
+        // Remove NO_AUTO_CREATE_USER from sql_mode if present
+        if (
+            $this->connection->server_version >= 80000
+            && in_array('NO_AUTO_CREATE_USER', $modes)
+        ) {
+            $modes = array_diff($modes, ['NO_AUTO_CREATE_USER']);
+        }
+
         $mode = implode(',', array_map('trim', $modes));
         return $this->_execute('SET SQL_MODE = ' . $this->value($mode)) != false;
     }
@@ -197,7 +226,7 @@ class DboMysqli extends DboMysqlBase
      *
      * @return array Array of tablenames in the database
      */
-    public function listSources()
+    public function listSources($data = null)
     {
         $cache = parent::listSources();
         if ($cache !== null) {
@@ -278,8 +307,8 @@ class DboMysqli extends DboMysqlBase
      */
     public function lastError()
     {
-        if (mysqli_errno($this->connection)) {
-            return mysqli_errno($this->connection).': '.mysqli_error($this->connection);
+        if ($this->connection->errno) {
+            return $this->connection->errno . ': ' . $this->connection->error;
         }
         return null;
     }
@@ -381,7 +410,11 @@ class DboMysqli extends DboMysqlBase
      */
     public function getEncoding()
     {
-        return mysqli_client_encoding($this->connection);
+        if (!$this->connection) {
+            return false;
+        }
+
+        return $this->connection->character_set_name();
     }
 
     /**
