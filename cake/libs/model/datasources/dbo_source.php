@@ -2884,10 +2884,10 @@ class DboSource extends DataSource {
  * Guesses the data type of an array
  *
  * @param string $value
- * @return void
+ * @return string
  * @access public
  */
-	function introspectType($value) {
+	function introspectType($value): string {
 		if (!is_array($value)) {
 			if ($value === true || $value === false) {
 				return 'boolean';
